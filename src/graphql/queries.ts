@@ -1,5 +1,15 @@
 import { gql } from '@apollo/client';
 
+export const USER = gql`
+  query Me {
+    me {
+      id
+      name
+      email
+    }
+  }
+`;
+
 export const MOVIE_DETAILS = gql`
   query MovieDetails($movieId: ID!) {
     movie(id: $movieId) {

@@ -1,3 +1,5 @@
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import { MOVIE_DETAILS } from '../graphql/queries';
@@ -24,8 +26,16 @@ const MovieDetails: React.FC = (props) => {
 
   return (
     <Container>
-      <Image src={data.movie.image_url} />
-      <span>{data.movie.title}</span>
+      <Row>
+        <Col xs='12' sm='4'>
+          <Image src={data.movie.image_url} style={{ width: '100%' }} />
+        </Col>
+        <Col>
+          <span>{data.movie.title}</span>
+        </Col>
+      </Row>
+      {/* <Image src={data.movie.image_url} />
+      <span>{data.movie.title}</span> */}
     </Container>
   );
 };
