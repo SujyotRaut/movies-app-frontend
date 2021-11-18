@@ -4,10 +4,11 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { AuthContextProvider } from './store/auth-context';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import App from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,12 +19,17 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const accessToken = localStorage.getItem('accessToken');
-  return {
-    headers: {
-      ...headers,
-      authorization: accessToken ? `Bearer ${accessToken}` : '',
-    },
-  };
+
+  if (accessToken) {
+    return {
+      headers: {
+        ...headers,
+        authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+    };
+  }
+
+  return { headers };
 });
 
 const client = new ApolloClient({
@@ -34,9 +40,11 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <AuthContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthContextProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

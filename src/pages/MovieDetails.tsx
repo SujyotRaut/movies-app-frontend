@@ -6,14 +6,6 @@ import { MOVIE_DETAILS } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
-type P = {
-  [id: string]: string;
-};
-
-interface I {
-  [id: string]: string;
-}
-
 const MovieDetails: React.FC = (props) => {
   const { id } = useParams<{ id: string }>();
 

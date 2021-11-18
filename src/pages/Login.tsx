@@ -1,67 +1,26 @@
-import { useMutation } from '@apollo/client';
 import { FormEventHandler, useContext, useRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
-import { authContext } from '../App';
-import { LOGIN, REGISTER } from '../graphql/mutations';
+import { authContext } from '../store/auth-context';
 
 const Login: React.FC = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(authContext);
   const [isLogin, setIsLogin] = useState(true);
+  const { registerHandler, loginHandler } = useContext(authContext);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const [register] = useMutation(REGISTER, {
-    variables: {
-      name: nameInputRef.current?.value ?? '',
-      email: emailInputRef.current?.value ?? '',
-      password: passwordInputRef.current?.value ?? '',
-    },
-    onCompleted: (data) => {
-      localStorage.setItem('accessToken', data.register.accessToken);
-      localStorage.setItem('refreshToken', data.register.refreshToken);
-      setIsAuthenticated!(true);
-    },
-    onError: (error) => {
-      localStorage.setItem('accessToken', '');
-      console.log('error login');
-    },
-  });
-
-  const [login] = useMutation(LOGIN, {
-    variables: {
-      email: emailInputRef.current?.value ?? '',
-      password: passwordInputRef.current?.value ?? '',
-    },
-    onCompleted: (data) => {
-      localStorage.setItem('accessToken', data.login.accessToken);
-      localStorage.setItem('refreshToken', data.login.refreshToken);
-      setIsAuthenticated!(true);
-    },
-    onError: (error) => {
-      localStorage.setItem('accessToken', '');
-      console.log('error login');
-    },
-  });
-
   const submitHandler: FormEventHandler = (event) => {
     event.preventDefault();
     if (isLogin) {
-      login({
-        variables: {
-          email: emailInputRef.current?.value ?? '',
-          password: passwordInputRef.current?.value ?? '',
-        },
-      });
+      const email = emailInputRef.current?.value ?? '';
+      const password = passwordInputRef.current?.value ?? '';
+      loginHandler(email, password);
     } else {
-      register({
-        variables: {
-          name: nameInputRef.current?.value ?? '',
-          email: emailInputRef.current?.value ?? '',
-          password: passwordInputRef.current?.value ?? '',
-        },
-      });
+      const name = nameInputRef.current?.value ?? '';
+      const email = emailInputRef.current?.value ?? '';
+      const password = passwordInputRef.current?.value ?? '';
+      registerHandler(name, email, password);
     }
   };
 

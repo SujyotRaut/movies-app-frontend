@@ -5,6 +5,11 @@ export const REGISTER = gql`
     register(name: $name, email: $email, password: $password) {
       accessToken
       refreshToken
+      currentUser {
+        id
+        name
+        email
+      }
     }
   }
 `;
@@ -14,6 +19,11 @@ export const LOGIN = gql`
     login(email: $email, password: $password) {
       accessToken
       refreshToken
+      currentUser {
+        id
+        name
+        email
+      }
     }
   }
 `;
