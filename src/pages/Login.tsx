@@ -1,10 +1,12 @@
 import { FormEventHandler, useContext, useRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
-import { authContext } from '../store/auth-context';
+import useLogin from '../hooks/useLogin';
+import useRegister from '../hooks/useRegister';
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const { registerHandler, loginHandler } = useContext(authContext);
+  const { register } = useRegister();
+  const { login } = useLogin();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -15,12 +17,12 @@ const Login: React.FC = () => {
     if (isLogin) {
       const email = emailInputRef.current?.value ?? '';
       const password = passwordInputRef.current?.value ?? '';
-      loginHandler(email, password);
+      login(email, password);
     } else {
       const name = nameInputRef.current?.value ?? '';
       const email = emailInputRef.current?.value ?? '';
       const password = passwordInputRef.current?.value ?? '';
-      registerHandler(name, email, password);
+      register(name, email, password);
     }
   };
 

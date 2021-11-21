@@ -12,6 +12,7 @@ import { authContext } from './store/auth-context';
 
 function App() {
   const { currentUser } = useContext(authContext);
+
   return (
     <div>
       <MyNavbar />
