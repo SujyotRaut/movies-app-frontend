@@ -6,9 +6,12 @@ interface AuthState {
   currentUser: User | null;
 }
 
+const user = localStorage.getItem('currentUser');
+const currentUser = user ? (JSON.parse(user) as User) : null;
+
 const initialState: AuthState = {
-  isAuthenticated: false,
-  currentUser: null,
+  isAuthenticated: user ? true : false,
+  currentUser,
 };
 
 export const authReducer: Reducer<AuthState, AuthAction> = (

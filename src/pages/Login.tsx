@@ -1,4 +1,4 @@
-import { FormEventHandler, useContext, useRef, useState } from 'react';
+import { FormEventHandler, useRef, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import useLogin from '../hooks/useLogin';
 import useRegister from '../hooks/useRegister';

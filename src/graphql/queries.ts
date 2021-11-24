@@ -10,6 +10,18 @@ export const USER = gql`
   }
 `;
 
+export const WATCHLIST = gql`
+  query Query {
+    me {
+      watchlist {
+        id
+        title
+        imageUrl
+      }
+    }
+  }
+`;
+
 export const MOVIE_DETAILS = gql`
   query MovieDetails($movieId: ID!) {
     movie(id: $movieId) {
@@ -18,12 +30,12 @@ export const MOVIE_DETAILS = gql`
       year
       popularity
       description
-      content_rating
-      movie_length
+      contentRating
+      movieLength
       rating
-      created_at
+      createdAt
       trailer
-      image_url
+      imageUrl
       release
       plot
       banner
@@ -45,7 +57,13 @@ export const UPCOMING_MOVIES = gql`
     movies(sort: popularity, order: desc, page: $page) {
       id
       title
-      image_url
+      imageUrl
+    }
+
+    me {
+      watchlist {
+        id
+      }
     }
   }
 `;
@@ -55,7 +73,7 @@ export const POPULAR_MOVIES = gql`
     movies(sort: popularity, order: desc, page: $page) {
       id
       title
-      image_url
+      imageUrl
     }
   }
 `;
@@ -65,7 +83,7 @@ export const RATED_MOVIES = gql`
     movies(sort: rating, order: desc, page: $page) {
       id
       title
-      image_url
+      imageUrl
     }
   }
 `;

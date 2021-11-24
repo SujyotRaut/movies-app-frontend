@@ -1,10 +1,10 @@
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
-import Container from 'react-bootstrap/Container';
-import { MOVIE_DETAILS } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Image from 'react-bootstrap/Image';
+import Row from 'react-bootstrap/Row';
 import { useParams } from 'react-router-dom';
+import { MOVIE_DETAILS } from '../graphql/queries';
 
 const MovieDetails: React.FC = (props) => {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +20,7 @@ const MovieDetails: React.FC = (props) => {
     <Container>
       <Row>
         <Col xs='12' sm='4'>
-          <Image src={data.movie.image_url} style={{ width: '100%' }} />
+          <Image src={data.movie.imageUrl} style={{ width: '100%' }} />
         </Col>
         <Col>
           <span>{data.movie.title}</span>

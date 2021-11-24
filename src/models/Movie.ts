@@ -4,17 +4,17 @@ export default interface Movie {
   year: string;
   popularity: string;
   description: string;
-  content_rating: string;
-  movie_length: string;
+  contentRating: string;
+  movieLength: string;
   rating: string;
-  created_at: string;
+  createdAt: string;
   trailer: string;
-  image_url: string;
+  imageUrl: string;
   release: string;
   plot: string;
   banner: string;
   type: string;
-  more_like_this: Array<any>;
-  gen: Array<{ id: string; genre: string }>;
+  genres: Array<{ id: string; genre: string }>;
   keywords: Array<{ id: string; keyword: string }>;
+  addedToWatchlist?: boolean;
 }

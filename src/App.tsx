@@ -1,23 +1,26 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
-import UpcomingMovies from './pages/UpcomingMovies';
-import PopularMovies from './pages/PopularMovies';
-import MovieDetails from './pages/MovieDetails';
-import RatedMovies from './pages/RatedMovies';
-import NotFound from './pages/NotFound';
+import MyNavbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import MyNavbar from './components/Navbar';
-import { useContext } from 'react';
-import { authContext } from './store/auth-context';
+import MovieDetails from './pages/MovieDetails';
+import NotFound from './pages/NotFound';
+import PopularMovies from './pages/PopularMovies';
+import RatedMovies from './pages/RatedMovies';
+import UpcomingMovies from './pages/UpcomingMovies';
+import Watchlist from './pages/Watchlist';
+import { useAppSelector } from './store';
 
 function App() {
-  const { currentUser } = useContext(authContext);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   return (
     <div>
       <MyNavbar />
       <Switch>
-        {currentUser && <Redirect from='/login' to='/' />}
+        {isAuthenticated && <Redirect from='/login' to='/' />}
+        {isAuthenticated && (
+          <Route path='/watchlist' children={<Watchlist />} />
+        )}
         <Route path='/' exact children={<Home />} />
         <Route path='/login' children={<Login />} />
         <Route path='/movie/:id' children={<MovieDetails />} />

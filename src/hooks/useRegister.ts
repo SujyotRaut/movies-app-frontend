@@ -4,31 +4,28 @@ import { REGISTER } from '../graphql/mutations';
 import store from '../store';
 
 const useRegister = () => {
-  const [registerMutation, { data, loading }] = useMutation(REGISTER, {
+  const [registerMutation, { loading }] = useMutation(REGISTER, {
     onCompleted: (data) => {
       const { accessToken, refreshToken, currentUser } = data.register;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      store.dispatch(authLogin(currentUser));
+      store.dispatch(authLogin(accessToken, refreshToken, currentUser));
     },
     onError: (error) => {
       store.dispatch(authLogout());
     },
   });
 
-  const register = (name: string, email: string, password: string) =>
-    registerMutation({
+  const register = (name: string, email: string, password: string) => {
+    return registerMutation({
       variables: {
         name,
         email,
         password,
       },
     });
+  };
 
   return {
     register,
-    data,
     loading,
   };
 };

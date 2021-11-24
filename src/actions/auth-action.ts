@@ -1,7 +1,7 @@
 import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { RootState } from '../store';
 import { graphqlUrl } from '..';
+import { RootState } from '../store';
 
 //#region Auth Action Types
 export interface User {
@@ -28,16 +28,24 @@ export type AuthAction = LoginAction | LogoutAction;
 //#endregion
 
 //#region Synchronous Acton Creators
-// Login action creator
-export const authLogin: ActionCreator<AuthAction> = (currentUser: User) => {
+export const authLogin: ActionCreator<AuthAction> = (
+  accessToken: string,
+  refreshToken: string,
+  currentUser: User
+) => {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
   return {
     type: AuthTypes.LOGIN,
     currentUser,
   };
 };
 
-// Logout action creator
 export const authLogout: ActionCreator<AuthAction> = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('currentUser');
   return {
     type: AuthTypes.LOGOUT,
   };
@@ -52,10 +60,14 @@ export const authRefresh: ActionCreator<
   const refreshTokenQuery = {
     query: `
     mutation {
-      refresh_token(refresh_token: \"${token}\") {
+      refresh(refreshToken: "${token}") {
         accessToken
         refreshToken
-        currentUser
+        currentUser {
+          id
+          name
+          email
+        }
       }
     }
   `,
@@ -74,14 +86,10 @@ export const authRefresh: ActionCreator<
 
   const jsonResponse = await response.json();
 
-  const { accessToken, refreshToken, currentUser } =
-    jsonResponse.data.refresh_token;
+  if (!jsonResponse.data) return dispatch(authLogout());
 
-  // Save new tokens to local storage
-  localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('refreshToken', refreshToken);
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  const { accessToken, refreshToken, currentUser } = jsonResponse.data.refresh;
 
-  // Dispatch login action with current user
-  return dispatch(authLogin(currentUser));
+  // Dispatch login action with accessToken, refreshToken and current user
+  return dispatch(authLogin(accessToken, refreshToken, currentUser));
 };

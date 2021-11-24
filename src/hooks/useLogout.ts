@@ -4,12 +4,8 @@ import { LOGOUT } from '../graphql/mutations';
 import store from '../store';
 
 const useLogout = () => {
-  const [logout, { data, loading }] = useMutation(LOGOUT, {
-    variables: { refreshToken: '' },
+  const [logoutMutation, { loading }] = useMutation(LOGOUT, {
     onCompleted: () => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('currentUser');
       store.dispatch(authLogout());
     },
     onError: (error) => {
@@ -17,9 +13,10 @@ const useLogout = () => {
     },
   });
 
+  const logout = () => logoutMutation();
+
   return {
     logout,
-    data,
     loading,
   };
 };

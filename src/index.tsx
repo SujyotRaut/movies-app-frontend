@@ -2,20 +2,20 @@ import {
   ApolloClient,
   ApolloProvider,
   createHttpLink,
-  InMemoryCache,
-  fromPromise,
   from,
+  fromPromise,
+  InMemoryCache,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { BrowserRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom';
-import React from 'react';
-import App from './App';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import store from './store';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { authLogout, authRefresh } from './actions/auth-action';
+import App from './App';
+import store from './store';
 
 export const graphqlUrl = 'http://localhost:4000/graphql';
 
@@ -45,27 +45,13 @@ const errorLink = onError(
         switch (err.extensions.code) {
           case 'TOKEN_EXPIRED':
             // Retry the request, returning the new observable
-            const refreshToken = localStorage.getItem('refreshToken');
-            if (!refreshToken) return console.log('no refresh Token');
-            return fromPromise(
-              store.dispatch(authRefresh()).catch((error) => {
-                // Handle token refresh errors e.g clear stored tokens, redirect to login, ...
-                console.log(error);
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('currentUser');
-                store.dispatch(authLogout());
-                return;
-              })
-            )
+            return fromPromise(store.dispatch(authRefresh()))
               .filter((value) => Boolean(value))
               .flatMap(() => forward(operation)); // Retry request
 
           // Remove invalid tokens and current user info
           case 'UNAUTHENTICATED':
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('currentUser');
+            store.dispatch(authLogout());
         }
       }
     }
@@ -85,11 +71,13 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ApolloProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

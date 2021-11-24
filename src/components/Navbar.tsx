@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
@@ -8,10 +8,13 @@ import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import Row from 'react-bootstrap/esm/Row';
 import LinkContainer from 'react-router-bootstrap/lib/LinkContainer';
 import Image from 'react-bootstrap/esm/Image';
-import { authContext } from '../store/auth-context';
+import { useAppSelector } from '../store';
+import useLogout from '../hooks/useLogout';
 
 const MyNavbar: React.FC = () => {
-  const { currentUser, logoutHandler } = useContext(authContext);
+  const { currentUser } = useAppSelector((state) => state.auth);
+  const { logout } = useLogout();
+
   return (
     <Navbar collapseOnSelect bg='light' expand={false} className='mb-2'>
       <Container>
@@ -56,7 +59,7 @@ const MyNavbar: React.FC = () => {
                       <h5>{currentUser.name}</h5>
                       <h5>{currentUser.email}</h5>
                     </Col>
-                    <Button onClick={logoutHandler}>Logout</Button>
+                    <Button onClick={logout}>Logout</Button>
                   </Row>
 
                   <NavDropdown.Divider />

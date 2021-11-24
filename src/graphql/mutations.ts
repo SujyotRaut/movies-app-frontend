@@ -29,7 +29,19 @@ export const LOGIN = gql`
 `;
 
 export const LOGOUT = gql`
-  mutation Logout($refreshToken: String!) {
-    logout(refresh_token: $refreshToken)
+  mutation Logout {
+    logout
+  }
+`;
+
+export const ADD_TO_WATCHLIST = gql`
+  mutation AddToWatchlist($movieId: ID!) {
+    addToWatchlist(id: $movieId)
+  }
+`;
+
+export const REMOVE_FROM_WATCHLIST = gql`
+  mutation RemoveFromWatchlist($movieId: ID!) {
+    removeFromWatchlist(id: $movieId)
   }
 `;
